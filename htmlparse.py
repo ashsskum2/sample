@@ -1,9 +1,16 @@
+import os
+import glob
 from bs4 import BeautifulSoup
 
 # Function to read HTML content from a file
 def read_html_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         return file.read()
+
+# Function to write extracted text to a file
+def write_text_to_file(file_path, text):
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(text)
 
 def extract_text_from_html(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
@@ -64,8 +71,24 @@ def extract_text_from_html(html_content):
 
     return formatted_text
 
+def process_html_files_in_folder(folder_path):
+    # Get all HTML files in the folder
+    html_files = glob.glob(os.path.join(folder_path, "*.html"))
+
+    for html_file in html_files:
+        # Read HTML content
+        html_content = read_html_file(html_file)
+
+        # Extract text from HTML
+        extracted_text = extract_text_from_html(html_content)
+
+        # Write extracted text to new file with "_parsed" suffix
+        base_name = os.path.basename(html_file)
+        new_file_name = os.path.splitext(base_name)[0] + "_parsed.txt"
+        new_file_path = os.path.join(folder_path, new_file_name)
+
+        write_text_to_file(new_file_path, extracted_text)
+
 # Usage
-file_path = 'sample.html'
-html_content = read_html_file(file_path)
-formatted_text = extract_text_from_html(html_content)
-print(formatted_text)
+folder_path = 'path_to_your_folder'  # Replace with your folder path
+process_html_files_in_folder(folder_path)
