@@ -1,4 +1,3 @@
-#ashsskum2
 import os
 import glob
 from bs4 import BeautifulSoup
